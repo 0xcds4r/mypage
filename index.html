@@ -1,240 +1,368 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>0xcds4r Page</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            color: #e0e0e0;
-            font-family: 'Orbitron', sans-serif;
-            overflow-x: hidden;
-            margin: 0;
-        }
-        .navbar {
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid #ff0000;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
-            position: fixed;
-            width: 100%;
-            z-index: 20;
-            transition: box-shadow 0.3s ease;
-        }
-        .navbar:hover {
-            box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
-        }
-        .section {
-            padding: 6rem 2rem;
-            position: relative;
-            min-height: 100vh;
-        }
-        .card {
-            background: rgba(20, 20, 20, 0.9);
-            border: 2px solid #ff0000;
-            border-radius: 1rem;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            animation: slideIn 0.8s ease-out;
-        }
-        .card:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
-        }
-        .title {
-            font-family: 'Cinzel', serif;
-            color: #ff0000;
-            text-shadow: 0 0 10px #ff0000;
-            position: relative;
-            animation: glitch 2s linear infinite;
-        }
-        @keyframes glitch {
-            2%, 64% { transform: translate(2px, 0); }
-            4%, 60% { transform: translate(-2px, 0); }
-            62% { transform: translate(0, 0); }
-        }
-        .achievement img {
-            width: 60px;
-            height: 60px;
-            filter: drop-shadow(0 0 5px #ff0000);
-            transition: transform 0.3s ease;
-        }
-        .achievement img:hover {
-            transform: scale(1.2);
-        }
-        .social-link {
-            color: #ff0000;
-            transition: color 0.3s ease, text-shadow 0.3s ease;
-        }
-        .social-link:hover {
-            color: #ff6666;
-            text-shadow: 0 0 10px #ff6666;
-        }
-        .bg-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle, rgba(255, 0, 0, 0.15) 0%, transparent 70%);
-        }
-        .neon-text {
-            animation: neon 1.5s ease-in-out infinite alternate;
-        }
-        @keyframes neon {
-            from { text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000; }
-            to { text-shadow: 0 0 10px #ff0000, 0 0 20px #ff6666, 0 0 30px #ff6666; }
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .typing-text::after {
-            content: '|';
-            animation: blink 0.7s infinite;
-        }
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-        .icon {
-            margin-right: 0.5rem;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>0xcds4r Page</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <link
+	href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Orbitron:wght@400;700&display=swap"
+	rel="stylesheet"
+  />
+  <style>
+	body {
+	  background: linear-gradient(90deg, #111214 0%, #1f2226 100%);
+	  color: #e1e1e1;
+	  font-family: 'Orbitron', sans-serif;
+	  overflow-x: hidden;
+	  margin: 0;
+	  -webkit-font-smoothing: antialiased;
+	  -moz-osx-font-smoothing: grayscale;
+	  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" fill="none" stroke="%23ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>') 12 12, auto;
+	  transition: background 3s ease;
+	}
+	.navbar {
+	  background: rgba(18, 20, 23, 0.75);
+	  backdrop-filter: saturate(180%) blur(12px);
+	  border-bottom: 1px solid #ff4c4c88;
+	  box-shadow: 0 2px 8px rgba(255, 76, 76, 0.15);
+	  position: fixed;
+	  width: 100%;
+	  z-index: 20;
+	  transition: box-shadow 0.3s ease;
+	  padding: 1rem 2rem;
+	  display: flex;
+	  justify-content: space-between;
+	  align-items: center;
+	}
+	.navbar:hover {
+	  box-shadow: 0 4px 20px rgba(255, 76, 76, 0.3);
+	}
+	.navbar a {
+	  color: #ff6b6b;
+	  font-weight: 600;
+	  text-decoration: none;
+	  transition: color 0.3s ease;
+	}
+	.navbar a:hover {
+	  color: #ff8787;
+	}
+	.icon {
+	  margin-right: 0.5rem;
+	}
+	.title {
+	  font-family: 'Orbitron', sans-serif;
+	  font-weight: 700;
+	  color: #ff6b6b;
+	  text-shadow:
+		0 0 6px #ff6b6baa,
+		0 0 12px #ff6b6b88;
+	  position: relative;
+	  animation: glitch 2.5s linear infinite;
+	}
+	@keyframes glitch {
+	  0%, 100% { transform: translate(0, 0); }
+	  20% { transform: translate(-1px, 0); }
+	  40% { transform: translate(1px, 0); }
+	  60% { transform: translate(-1px, 0); }
+	  80% { transform: translate(1px, 0); }
+	}
+	.section {
+	  padding: 7rem 2rem 5rem;
+	  min-height: 100vh;
+	  max-width: 900px;
+	  margin: 0 auto;
+	}
+	.card {
+	  background: rgba(30, 30, 30, 0.85);
+	  border-radius: 1rem;
+	  padding: 2.5rem;
+	  margin-bottom: 2.5rem;
+	  box-shadow:
+		0 8px 16px rgba(255, 107, 107, 0.15);
+	  transition: transform 0.3s ease, box-shadow 0.3s ease;
+	  animation: slideIn 0.8s ease-out forwards;
+	}
+	.card:hover {
+	  transform: translateY(-10px);
+	  box-shadow:
+		0 12px 24px rgba(255, 107, 107, 0.3);
+	}
+	@keyframes slideIn {
+	  from {
+		opacity: 0;
+		transform: translateY(30px);
+	  }
+	  to {
+		opacity: 1;
+		transform: translateY(0);
+	  }
+	}
+	.achievement img {
+	  width: 70px;
+	  height: 70px;
+	  filter: drop-shadow(0 0 8px #ff6b6b88);
+	  transition: transform 0.3s ease;
+	}
+	.achievement img:hover {
+	  transform: scale(1.25);
+	}
+	.social-link {
+	  color: #ff7b7b;
+	  text-decoration: none;
+	  font-weight: 600;
+	  transition: color 0.3s ease, text-shadow 0.3s ease;
+	}
+	.social-link:hover {
+	  color: #ffa3a3;
+	  text-shadow: 0 0 8px #ffa3a3;
+	}
+	.bg-particles {
+	  position: fixed;
+	  top: 0;
+	  left: 0;
+	  width: 100%;
+	  height: 100%;
+	  z-index: -1;
+	  background: radial-gradient(circle at center, rgba(255, 107, 107, 0.12) 0%, transparent 75%);
+	  transition: background 3s ease;
+	}
+	.neon-text {
+	  animation: neon 1.8s ease-in-out infinite alternate;
+	}
+	@keyframes neon {
+	  from {
+		text-shadow:
+		  0 0 4px #ff6b6baa,
+		  0 0 10px #ff6b6b66,
+		  0 0 20px #ff6b6b44;
+	  }
+	  to {
+		text-shadow:
+		  0 0 8px #ff8787aa,
+		  0 0 16px #ff878788,
+		  0 0 28px #ff878744;
+	  }
+	}
+	.typing-text::after {
+	  content: '|';
+	  animation: blink 0.8s steps(1) infinite;
+	  color: #ff6b6b;
+	  font-weight: 700;
+	  margin-left: 2px;
+	}
+	@keyframes blink {
+	  0%, 100% {
+		opacity: 1;
+	  }
+	  50% {
+		opacity: 0;
+	  }
+	}
+	i.fas, i.fab {
+	  color: #ff6b6b;
+	  transition: color 0.3s ease;
+	}
+	i.fas:hover, i.fab:hover {
+	  color: #ff8a8a;
+	}
+	p, li {
+	  color: #d9d9d9;
+	  line-height: 1.6;
+	}
+	a {
+	  color: #ff6b6b;
+	  text-decoration: underline;
+	  transition: color 0.3s ease;
+	}
+	a:hover {
+	  color: #ff8a8a;
+	}
+	@media (max-width: 600px) {
+	  .navbar {
+		flex-direction: column;
+		gap: 0.75rem;
+	  }
+	  .section {
+		padding: 5rem 1rem 3rem;
+	  }
+	  .card {
+		padding: 1.5rem;
+	  }
+	  .title {
+		font-size: 1.8rem;
+	  }
+	}
+  </style>
 </head>
 <body>
-    <canvas id="particles" class="bg-particles"></canvas>
+  <canvas id="particles" class="bg-particles"></canvas>
 
-    <nav class="navbar p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-3xl font-bold title neon-text">0xcds4r</h1>
-            <div class="space-x-6">
-                <a href="#home" class="hover:text-red-400 transition"><i class="fas fa-home icon"></i>Home</a>
-                <a href="#about" class="hover:text-red-400 transition"><i class="fas fa-user icon"></i>About</a>
-                <a href="#contact" class="hover:text-red-400 transition"><i class="fas fa-envelope icon"></i>Contact</a>
-            </div>
-        </div>
-    </nav>
+  <nav class="navbar">
+	<h1 class="text-3xl font-bold title">0xcds4r</h1>
+	<div class="flex space-x-8">
+	  <a href="#home"><i class="fas fa-home icon"></i>Home</a>
+	  <a href="#about"><i class="fas fa-user icon"></i>About</a>
+	  <a href="#contact"><i class="fas fa-envelope icon"></i>Contact</a>
+	</div>
+  </nav>
 
-    <section id="home" class="section flex items-center justify-center text-center">
-        <div>
-            <h2 class="text-5xl font-bold title neon-text mb-6">0xcds4r</h2>
-            <p id="typing" class="text-xl mb-4 typing-text"></p>
-            <p class="text-lg italic">Based in Russia <i class="fas fa-map-marker-alt icon"></i></p>
-        </div>
-    </section>
+  <section id="home" class="section flex flex-col items-center justify-center text-center">
+	<h2 class="text-5xl font-bold title mb-6">0xcds4r</h2>
+	<p id="typing" class="text-2xl mb-4 typing-text"></p>
+	<p class="text-lg italic flex items-center gap-2">
+	  Based in Russia <i class="fas fa-map-marker-alt icon"></i>
+	</p>
+  </section>
 
-    <section id="about" class="section">
-        <h2 class="text-4xl font-bold title text-center mb-8">About Me</h2>
-        <div class="card container mx-auto">
-            <p class="text-lg"><i class="fas fa-code icon"></i>Hello! My name is Artem, known online as 0xcsd4r. I was born in Russia in 2003, and I am currently 22 years old. I specialize in video game modding, primarily focused on the Grand Theft Auto (GTA) series. I have strong expertise and practical skills in C++ programming, as well as experience working with the Android platform. I am well-versed in reverse engineering processes and their broader aspects. In addition to modding, I engage in various IT-related fields, including development and other related tasks.</p>
-            <h3 class="text-xl font-semibold title mt-4"><i class="fas fa-tools icon"></i>Specialties</h3>
-            <ul class="list-none mt-2 text-lg">
-                <li><i class="fas fa-microchip icon"></i>Reverse Engineering</li>
-                <li><i class="fas fa-tachometer-alt icon"></i>Low-Level Optimization</li>
-                <li><i class="fas fa-gamepad icon"></i>Game Modding</li>
-            </ul>
-            <p class="mt-4 text-lg"><i class="fas fa-skull-crossbones icon"></i>Vibe: <span class="italic">Psychopathy with a side of code</span></p>
-        </div>
-    </section>
+  <section id="about" class="section">
+	<h2 class="text-4xl font-bold title text-center mb-8">About Me</h2>
+	<div class="card">
+	  <p class="text-lg mb-4">
+		<i class="fas fa-code icon"></i>
+		Hello! My name is Artem, known online as 0xcds4r. Born in Russia in 2003, I am currently 22 years old.
+		I specialize in video game modding, primarily focused on the Grand Theft Auto (GTA) series.
+		I have strong expertise and practical skills in C++ programming, as well as experience working with the Android platform.
+		I am well-versed in reverse engineering processes and their broader aspects.
+		In addition to modding, I engage in various IT-related fields, including development and other related tasks.
+	  </p>
 
-    <section id="contact" class="section">
-        <h2 class="text-4xl font-bold title text-center mb-8">Contact</h2>
-        <div class="card container mx-auto text-center">
-            <p class="text-lg"><i class="fas fa-user-tie icon"></i>Manager: <a href="mailto:ahjtit923@proton.me" class="social-link">ahjtit923@proton.me</a></p>
-            <p class="text-lg mt-2"><i class="fab fa-telegram-plane icon"></i>Telegram: <a href="https://t.me/burnagfy" class="social-link">@burnagfy</a></p>
-            <p class="text-lg mt-2"><i class="fab fa-github icon"></i>GitHub: <a href="https://github.com/0xcds4r" class="social-link">@0xcds4r</a></p>
-            <p class="text-lg mt-2"><i class="fab fa-x-twitter icon"></i>X: <a href="https://x.com/0xcds4r" class="social-link">@0xcds4r</a></p>
-            <p class="text-lg mt-2"><i class="fab fa-facebook icon"></i>Facebook: <a href="https://www.facebook.com/profile.php?id=100080432366634" class="social-link">Profile</a></p>
-        </div>
-    </section>
+	  <h3 class="text-xl font-semibold title mb-3"><i class="fas fa-tools icon"></i>Specialties</h3>
+	  <ul class="list-disc list-inside space-y-2 text-lg">
+		<li><i class="fas fa-microchip icon"></i>Reverse Engineering</li>
+		<li><i class="fas fa-tachometer-alt icon"></i>Low-Level Optimization</li>
+		<li><i class="fas fa-gamepad icon"></i>Game Modding</li>
+	  </ul>
 
-    <footer class="p-4 text-center">
-        <p class="text-lg">© 2025 0xcds4r. All rights reserved.</p>
-    </footer>
+	  <p class="mt-6 text-lg">
+		<i class="fas fa-skull-crossbones icon"></i>Vibe:
+		<span class="italic text-red-400 font-semibold">Psychopathy with a side of code</span>
+	  </p>
+	</div>
+  </section>
 
-    <script>
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
+  <section id="contact" class="section">
+	<h2 class="text-4xl font-bold title text-center mb-8">Contact</h2>
+	<div class="card text-center">
+	  <p class="text-lg mb-3">
+		<i class="fas fa-user-tie icon"></i>Manager:
+		<a href="mailto:ahjtit923@proton.me" class="social-link">ahjtit923@proton.me</a>
+	  </p>
+	  <p class="text-lg mb-3">
+		<i class="fab fa-telegram-plane icon"></i>Telegram:
+		<a href="https://t.me/burnagfy" class="social-link" target="_blank" rel="noopener">@burnagfy</a>
+	  </p>
+	  <p class="text-lg mb-3">
+		<i class="fab fa-github icon"></i>GitHub:
+		<a href="https://github.com/0xcds4r" class="social-link" target="_blank" rel="noopener">@0xcds4r</a>
+	  </p>
+	  <p class="text-lg mb-3">
+		<i class="fab fa-x-twitter icon"></i>X:
+		<a href="https://x.com/0xcds4r" class="social-link" target="_blank" rel="noopener">@0xcds4r</a>
+	  </p>
+	  <p class="text-lg mb-3">
+		<i class="fab fa-facebook icon"></i>Facebook:
+		<a href="https://www.facebook.com/profile.php?id=100080432366634" class="social-link" target="_blank" rel="noopener">Profile</a>
+	  </p>
+	</div>
+  </section>
 
-        const text = "Developer";
-        let i = 0;
-        const speed = 100;
-        function typeWriter() {
-            if (i < text.length) {
-                document.getElementById("typing").innerHTML += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, speed);
-            }
-        }
-        window.onload = typeWriter;
+  <footer class="p-4 text-center text-gray-400 text-sm">
+	<p>© 2025 0xcds4r. All rights reserved.</p>
+  </footer>
 
-        const canvas = document.getElementById('particles');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+  <script>
+	document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+	  anchor.addEventListener('click', e => {
+		e.preventDefault();
+		document.querySelector(anchor.getAttribute('href')).scrollIntoView({
+		  behavior: 'smooth',
+		});
+	  });
+	});
 
-        const particlesArray = [];
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 5 + 1;
-                this.speedX = Math.random() * 3 - 1.5;
-                this.speedY = Math.random() * 3 - 1.5;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.size > 0.2) this.size -= 0.1;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+	const text = 'Developer';
+	let i = 0;
+	const speed = 66;
 
-        function initParticles() {
-            for (let i = 0; i < 100; i++) {
-                particlesArray.push(new Particle());
-            }
-        }
+	function typeWriter() 
+	{
+		if (i < text.length) {
+			document.getElementById('typing').innerHTML += text.charAt(i);
+			i++;
+			setTimeout(typeWriter, speed);
+		}
+	}
 
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-                particlesArray[i].draw();
-                if (particlesArray[i].size <= 0.2) {
-                    particlesArray.splice(i, 1);
-                    i--;
-                    particlesArray.push(new Particle());
-                }
-            }
-            requestAnimationFrame(animateParticles);
-        }
+	window.onload = () => {
+	  typeWriter();
+	};
 
-        initParticles();
-        animateParticles();
+	const canvas = document.getElementById('particles');
+	const ctx = canvas.getContext('2d');
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
 
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-    </script>
+	const particlesArray = [];
+
+	class Particle 
+	{
+		constructor() 
+		{
+			this.x = Math.random() * canvas.width;
+			this.y = Math.random() * canvas.height;
+			this.size = Math.random() * 4 + 1;
+			this.speedX = (Math.random() - 0.5) * 0.7;
+			this.speedY = (Math.random() - 0.5) * 0.7;
+			this.opacity = Math.random() * 0.5 + 0.3;
+		}
+
+		update() 
+		{
+			this.x += this.speedX;
+			this.y += this.speedY;
+			if (this.x < 0) this.x = canvas.width;
+			if (this.x > canvas.width) this.x = 0;
+			if (this.y < 0) this.y = canvas.height;
+			if (this.y > canvas.height) this.y = 0;
+		}
+
+		draw() 
+		{
+			ctx.fillStyle = `rgba(255, 107, 107, ${this.opacity})`;
+			ctx.beginPath();
+			ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+			ctx.fill();
+		}
+	}
+
+	function initParticles() 
+	{
+		for (let i = 0; i < 120; i++) {
+			particlesArray.push(new Particle());
+		}
+	}
+
+	function animateParticles() 
+	{
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+		particlesArray.forEach(p => {
+			p.update();
+			p.draw();
+		});
+
+		requestAnimationFrame(animateParticles);
+	}
+
+	initParticles();
+	animateParticles();
+
+	window.addEventListener('resize', () => {
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+	});
+  </script>
 </body>
 </html>
