@@ -1,1267 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>0xcds4r</title>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>0xcds4r</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --red: #ff4444;
-      --red-dim: #ff444488;
-      --red-glow: #ff444422;
-      --bg: #0d0d0f;
-      --bg2: #111215;
-      --surface: #16181c;
-      --border: #ff444420;
-      --text: #c8c8d0;
-      --text-dim: #666;
-      --mono: 'Share Tech Mono', monospace;
-      --display: 'Orbitron', sans-serif;
-    }
+  :root {
+	--ink: #e8e5df;
+	--ink-mid: #888;
+	--ink-light: #555;
+	--rule: #2a2a2a;
+	--bg: #111;
+	--card: #161616;
+	--accent: #c0392b;
+  }
 
-    html { scroll-behavior: smooth; }
+  html { background: var(--bg); }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--mono);
-      overflow-x: hidden;
-      cursor: crosshair;
-    }
+  body {
+	font-family: 'DM Mono', monospace;
+	background: var(--bg);
+	color: var(--ink);
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 40px 24px;
+  }
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-              0deg,
-              transparent,
-              transparent 2px,
-              rgba(0,0,0,0.06) 2px,
-              rgba(0,0,0,0.06) 4px
-      );
-      pointer-events: none;
-      z-index: 9999;
-      animation: scanMove 8s linear infinite;
-    }
-    @keyframes scanMove {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 40px; }
-    }
+  .card {
+	background: var(--card);
+	width: 100%;
+	max-width: 560px;
+	padding: 52px 52px 48px;
+	border: 1px solid var(--rule);
+	position: relative;
+  }
 
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.7) 100%);
-      pointer-events: none;
-      z-index: 9998;
-    }
+  .card::before, .card::after {
+	content: '';
+	position: absolute;
+	width: 14px; height: 14px;
+	border-color: var(--ink-light);
+	border-style: solid;
+  }
+  .card::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+  .card::after  { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
 
-    .cursor-dot {
-      position: fixed;
-      width: 6px; height: 6px;
-      background: var(--red);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 10000;
-      transform: translate(-50%, -50%);
-      transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
-      box-shadow: 0 0 12px var(--red), 0 0 24px var(--red-dim);
-    }
-    .cursor-ring {
-      position: fixed;
-      width: 32px; height: 32px;
-      border: 1px solid var(--red-dim);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: transform 0.18s cubic-bezier(.25,.46,.45,.94), width 0.3s, height 0.3s, opacity 0.3s, border-color 0.3s;
-    }
-    body:hover .cursor-ring { opacity: 1; }
+  .header {
+	display: flex;
+	align-items: flex-start;
+	gap: 24px;
+	margin-bottom: 36px;
+  }
 
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2.5rem;
-      background: rgba(13, 13, 15, 0.85);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
-      animation: navSlideDown 0.7s cubic-bezier(.25,.46,.45,.94) both;
-    }
-    @keyframes navSlideDown {
-      from { transform: translateY(-100%); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
+  .avatar {
+	width: 64px; height: 64px;
+	border-radius: 2px;
+	object-fit: cover;
+	filter: grayscale(20%) brightness(0.85);
+	flex-shrink: 0;
+	border: 1px solid var(--rule);
+  }
 
-    nav::after {
-      content: '';
-      position: absolute;
-      bottom: -1px; left: 0;
-      height: 1px;
-      width: 0%;
-      background: var(--red);
-      box-shadow: 0 0 8px var(--red);
-      animation: navLine 2.5s 0.8s ease forwards;
-    }
-    @keyframes navLine {
-      to { width: 100%; }
-    }
+  .name-sub {
+	font-size: 10px;
+	letter-spacing: 3px;
+	color: var(--ink-light);
+	margin-bottom: 6px;
+	text-transform: uppercase;
+  }
 
-    .nav-logo {
-      font-family: var(--display);
-      font-weight: 900;
-      font-size: 1.1rem;
-      color: var(--red);
-      letter-spacing: 0.1em;
-      text-shadow: 0 0 12px var(--red-dim);
-      text-decoration: none;
-      animation: logoPulse 3s ease-in-out infinite;
-    }
-    @keyframes logoPulse {
-      0%, 100% { text-shadow: 0 0 12px var(--red-dim); }
-      50% { text-shadow: 0 0 24px var(--red), 0 0 48px var(--red-dim); }
-    }
+  .name-en {
+	font-size: 22px;
+	font-weight: 400;
+	letter-spacing: -0.5px;
+	color: var(--ink);
+	line-height: 1;
+  }
+  .name-en span { color: var(--accent); }
 
-    .nav-links { display: flex; gap: 2rem; }
+  .tagline {
+	font-size: 11px;
+	color: var(--ink-light);
+	margin-top: 8px;
+	letter-spacing: 0.5px;
+	line-height: 1.7;
+  }
 
-    .nav-links a {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      text-decoration: none;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-      position: relative;
-    }
-    .nav-links a::before {
-      content: '// ';
-      color: var(--red);
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -4px; left: 0;
-      width: 0%; height: 1px;
-      background: var(--red);
-      transition: width 0.3s ease;
-    }
-    .nav-links a:hover { color: var(--red); }
-    .nav-links a:hover::before { opacity: 1; }
-    .nav-links a:hover::after { width: 100%; }
+  .rule { height: 1px; background: var(--rule); margin: 0 0 28px; }
 
-    #home {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 6rem 2rem 4rem;
-      position: relative;
-    }
+  .section { margin-bottom: 28px; }
 
-    #matrix-canvas {
-      position: absolute;
-      inset: 0;
-      opacity: 0.07;
-      pointer-events: none;
-    }
+  .section-title {
+	font-size: 9px;
+	letter-spacing: 3px;
+	text-transform: uppercase;
+	color: var(--ink-light);
+	margin-bottom: 14px;
+  }
 
-    .hex-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-              radial-gradient(circle, var(--red) 1px, transparent 1px);
-      background-size: 40px 40px;
-      opacity: 0.04;
-      pointer-events: none;
-      animation: hexPulse 4s ease-in-out infinite;
-    }
-    @keyframes hexPulse {
-      0%, 100% { opacity: 0.04; }
-      50% { opacity: 0.08; }
-    }
+  .row {
+	display: flex;
+	align-items: baseline;
+	gap: 16px;
+	padding: 8px 0;
+	border-bottom: 1px solid var(--rule);
+	font-size: 12px;
+  }
+  .row:first-child { border-top: 1px solid var(--rule); }
 
-    .hero-pre {
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      color: var(--red);
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.6s 0.2s ease forwards;
-      position: relative;
-    }
+  .row-label {
+	font-size: 9px;
+	letter-spacing: 2px;
+	color: var(--ink-light);
+	text-transform: uppercase;
+	min-width: 64px;
+	flex-shrink: 0;
+  }
 
-    .hero-pre::before {
-      content: '●';
-      margin-right: 0.5rem;
-      animation: statusBlink 1s steps(1) infinite;
-    }
-    @keyframes statusBlink { 0%,100%{opacity:1;color:var(--red)} 50%{opacity:0.3} }
+  .row-value {
+	color: var(--ink-mid);
+	text-decoration: none;
+	transition: color 0.15s;
+	word-break: break-all;
+	line-height: 1.4;
+  }
+  a.row-value:hover { color: var(--accent); }
 
-    .hero-name {
-      font-family: var(--display);
-      font-weight: 900;
-      font-size: clamp(3.5rem, 10vw, 7rem);
-      color: #fff;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      margin-bottom: 0.75rem;
-      opacity: 0;
-      animation: fadeUp 0.6s 0.4s ease forwards, textFlicker 6s 2s ease-in-out infinite;
-      position: relative;
-    }
-    @keyframes textFlicker {
-      0%, 97%, 100% { opacity: 1; }
-      98% { opacity: 0.7; }
-      99% { opacity: 1; }
-      99.5% { opacity: 0.5; }
-    }
+  .skills-list { display: flex; flex-wrap: wrap; gap: 7px; }
+  .skill-tag {
+	font-size: 10px;
+	letter-spacing: 1px;
+	color: var(--ink-light);
+	border: 1px solid var(--rule);
+	padding: 3px 10px;
+	transition: border-color 0.15s, color 0.15s;
+  }
+  .skill-tag:hover { border-color: var(--ink-light); color: var(--ink-mid); }
 
-    .hero-name .accent { color: var(--red); }
+  #repo-list { display: flex; flex-direction: column; }
 
-    .hero-name::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 0; top: 0;
-      width: 100%;
-      color: var(--red);
-      clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
-      opacity: 0;
-      animation: glitch1 5s 1.5s infinite;
-    }
-    .hero-name::before {
-      content: attr(data-text);
-      position: absolute;
-      left: 0; top: 0;
-      width: 100%;
-      color: #00ffff;
-      clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%);
-      opacity: 0;
-      animation: glitch2 5s 1.7s infinite;
-      font-family: var(--display);
-      font-weight: 900;
-      font-size: clamp(3.5rem, 10vw, 7rem);
-      letter-spacing: -0.02em;
-    }
-    @keyframes glitch1 {
-      0%, 88%, 100% { opacity: 0; transform: translateX(0); }
-      90% { opacity: 0.7; transform: translateX(-6px); }
-      92% { opacity: 0.5; transform: translateX(5px); }
-      94% { opacity: 0.8; transform: translateX(-3px); }
-      96% { opacity: 0; }
-    }
-    @keyframes glitch2 {
-      0%, 88%, 100% { opacity: 0; transform: translateX(0); }
-      90% { opacity: 0.5; transform: translateX(6px); }
-      92% { opacity: 0.4; transform: translateX(-4px); }
-      94% { opacity: 0.7; transform: translateX(2px); }
-      96% { opacity: 0; }
-    }
+  .repo-row {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	padding: 8px 0;
+	border-bottom: 1px solid var(--rule);
+	text-decoration: none;
+	gap: 12px;
+  }
+  .repo-row:first-child { border-top: 1px solid var(--rule); }
+  .repo-row:hover .repo-name-text { color: var(--accent); }
 
-    .hero-subtitle {
-      font-size: 0.9rem;
-      color: var(--text-dim);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 2.5rem;
-      opacity: 0;
-      animation: fadeUp 0.6s 0.6s ease forwards;
-      position: relative;
-      display: inline-block;
-    }
+  .repo-name-text {
+	font-size: 12px; color: var(--ink);
+	transition: color 0.15s; flex-shrink: 0;
+  }
+  .repo-desc-text {
+	font-size: 10px; color: var(--ink-light); flex: 1;
+	text-align: right; overflow: hidden;
+	text-overflow: ellipsis; white-space: nowrap;
+  }
+  .repo-star { font-size: 10px; color: var(--accent); flex-shrink: 0; }
 
-    .hero-subtitle::after {
-      content: '';
-      position: absolute;
-      bottom: -6px; left: 50%;
-      transform: translateX(-50%);
-      width: 0%; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--red), transparent);
-      animation: subtitleLine 2s 1.5s ease forwards;
-    }
-    @keyframes subtitleLine { to { width: 100%; } }
+  .repo-placeholder {
+	font-size: 11px;
+	color: var(--ink-light);
+	padding: 12px 0;
+	border-top: 1px solid var(--rule);
+  }
 
-    #typing-wrap {
-      display: inline-block;
-      font-size: 1rem;
-      color: var(--red);
-      margin-bottom: 2rem;
-      height: 1.6em;
-      opacity: 0;
-      animation: fadeUp 0.6s 0.8s ease forwards;
-      position: relative;
-    }
+  .footer {
+	margin-top: 36px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 9px;
+	letter-spacing: 2px;
+	color: var(--ink-light);
+	text-transform: uppercase;
+  }
+  .footer-dot {
+	width: 5px; height: 5px;
+	border-radius: 50%;
+	background: var(--accent);
+	opacity: 0.7;
+  }
 
-    #typing-wrap::before {
-      content: '[';
-      position: absolute;
-      left: -1.2rem;
-      color: var(--red-dim);
-      animation: bracketPulse 2s ease-in-out infinite;
-    }
-    #typing-wrap::after {
-      content: ']';
-      position: absolute;
-      right: -1rem;
-      color: var(--red-dim);
-      animation: bracketPulse 2s 0.3s ease-in-out infinite;
-    }
-    @keyframes bracketPulse {
-      0%, 100% { color: var(--red-dim); transform: scaleY(1); }
-      50% { color: var(--red); transform: scaleY(1.2); }
-    }
-
-    #typing { color: #fff; }
-    .cursor {
-      display: inline-block;
-      width: 2px;
-      height: 1em;
-      background: var(--red);
-      margin-left: 3px;
-      vertical-align: middle;
-      animation: blink 0.8s steps(1) infinite;
-      box-shadow: 0 0 8px var(--red);
-    }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-
-    .hero-location {
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      opacity: 0;
-      animation: fadeUp 0.6s 1s ease forwards;
-    }
-    .hero-location span { color: var(--red); }
-
-    .hero-stats {
-      display: flex;
-      gap: 3rem;
-      margin-top: 2.5rem;
-      opacity: 0;
-      animation: fadeUp 0.6s 1.2s ease forwards;
-    }
-    .stat {
-      text-align: center;
-      position: relative;
-    }
-    .stat-num {
-      font-family: var(--display);
-      font-size: 1.8rem;
-      color: var(--red);
-      font-weight: 900;
-      display: block;
-      animation: countUp 1s 1.5s ease forwards;
-    }
-    .stat-label {
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-    }
-
-    .stat::before {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 60px; height: 60px;
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      animation: ringExpand 3s ease-out infinite;
-    }
-    @keyframes ringExpand {
-      0% { width: 40px; height: 40px; opacity: 0.5; }
-      100% { width: 80px; height: 80px; opacity: 0; }
-    }
-
-    .scroll-hint {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      opacity: 0;
-      animation: fadeUp 0.6s 1.4s ease forwards;
-    }
-    .scroll-hint .line {
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(to bottom, var(--red), transparent);
-      animation: scrollLine 1.5s ease-in-out infinite;
-    }
-    @keyframes scrollLine {
-      0%, 100% { transform: scaleY(1); opacity: 1; }
-      50% { transform: scaleY(0.5); opacity: 0.4; }
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    section {
-      padding: 7rem 2rem 5rem;
-      max-width: 860px;
-      margin: 0 auto;
-    }
-
-    .section-label {
-      font-size: 0.65rem;
-      letter-spacing: 0.3em;
-      color: var(--red);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-      opacity: 0;
-      transform: translateX(-20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .section-label.visible { opacity: 1; transform: translateX(0); }
-
-    .section-title {
-      font-family: var(--display);
-      font-weight: 700;
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      color: #fff;
-      margin-bottom: 3rem;
-      letter-spacing: -0.01em;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s 0.1s ease, transform 0.6s 0.1s ease;
-      position: relative;
-      display: inline-block;
-    }
-    .section-title.visible { opacity: 1; transform: translateY(0); }
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: -8px; left: 0;
-      height: 2px;
-      width: 0;
-      background: var(--red);
-      box-shadow: 0 0 8px var(--red);
-      transition: width 0.8s 0.4s ease;
-    }
-    .section-title.visible::after { width: 100%; }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 2.5rem;
-      margin-bottom: 1.5rem;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    .card.visible {
-      animation: cardAppear 0.6s ease forwards;
-    }
-    @keyframes cardAppear {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 3px; height: 0%;
-      background: var(--red);
-      box-shadow: 0 0 12px var(--red-dim);
-      transition: height 0.8s ease;
-    }
-    .card.visible::before { height: 100%; }
-
-    .card::after {
-      content: '';
-      position: absolute;
-      top: -1px; right: -1px;
-      width: 20px; height: 20px;
-      border-top: 2px solid var(--red);
-      border-right: 2px solid var(--red);
-      opacity: 0;
-      transition: opacity 0.4s 0.5s;
-    }
-    .card.visible::after { opacity: 1; }
-
-    .card:hover {
-      border-color: var(--red-dim);
-      transform: translateX(4px);
-      box-shadow: -4px 0 20px var(--red-glow), inset 0 0 30px rgba(255,68,68,0.02);
-    }
-
-    .card .scan-line {
-      position: absolute;
-      top: -100%; left: 0;
-      width: 100%; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--red-dim), transparent);
-      pointer-events: none;
-      transition: top 0s;
-    }
-    .card:hover .scan-line {
-      animation: scanCard 0.8s ease;
-    }
-    @keyframes scanCard {
-      from { top: -5%; }
-      to { top: 110%; }
-    }
-
-    .card p {
-      line-height: 1.9;
-      font-size: 0.9rem;
-      color: var(--text);
-      margin-bottom: 1.2rem;
-    }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .skill-chip {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      padding: 0.75rem 1rem;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text);
-      transition: border-color 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(20px) scale(0.95);
-    }
-    .skill-chip.visible {
-      animation: chipAppear 0.4s ease forwards;
-    }
-    @keyframes chipAppear {
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .skill-chip::after {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 60%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,68,68,0.06), transparent);
-      transition: left 0.4s ease;
-    }
-    .skill-chip:hover::after { left: 150%; }
-
-    .skill-chip i {
-      color: var(--red);
-      font-size: 0.85rem;
-      transition: transform 0.3s, text-shadow 0.3s;
-    }
-    .skill-chip:hover {
-      border-color: var(--red);
-      color: #fff;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(255,68,68,0.15);
-    }
-    .skill-chip:hover i {
-      transform: scale(1.2) rotate(-5deg);
-      text-shadow: 0 0 12px var(--red);
-    }
-
-    .skill-bar-wrap {
-      margin-top: 2rem;
-    }
-    .skill-bar-row {
-      margin-bottom: 1.2rem;
-      opacity: 0;
-      transform: translateX(-20px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-    .skill-bar-row.visible { opacity: 1; transform: translateX(0); }
-
-    .skill-bar-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.4rem;
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .skill-bar-name { color: var(--text); }
-    .skill-bar-pct { color: var(--red); }
-
-    .skill-bar-track {
-      height: 3px;
-      background: var(--border);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .skill-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--red), #ff8888);
-      border-radius: 2px;
-      width: 0%;
-      box-shadow: 0 0 8px var(--red-dim);
-      transition: width 1.2s cubic-bezier(.25,.46,.45,.94);
-    }
-    .skill-bar-row.visible .skill-bar-fill { width: var(--pct); }
-
-    .contact-grid {
-      display: grid;
-      gap: 0.75rem;
-    }
-
-    .contact-row {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-      padding: 1rem 1.5rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      text-decoration: none;
-      transition: border-color 0.3s, background 0.3s, transform 0.3s, box-shadow 0.3s;
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateX(-30px);
-    }
-    .contact-row.visible {
-      animation: contactSlide 0.5s ease forwards;
-    }
-    @keyframes contactSlide {
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    .contact-row i {
-      color: var(--red);
-      width: 18px;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-      transition: transform 0.3s;
-    }
-
-    .contact-row::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0;
-      width: 0%; height: 100%;
-      background: linear-gradient(90deg, rgba(255,68,68,0.05), transparent);
-      transition: width 0.4s ease;
-    }
-    .contact-row:hover::before { width: 100%; }
-
-    .contact-row:hover {
-      border-color: var(--red-dim);
-      background: #1c1e22;
-      transform: translateX(6px);
-      box-shadow: -6px 0 20px var(--red-glow);
-    }
-    .contact-row:hover i {
-      transform: scale(1.3);
-    }
-
-    .contact-label {
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      width: 80px;
-      flex-shrink: 0;
-    }
-    .contact-value {
-      font-size: 0.85rem;
-      color: #fff;
-      transition: color 0.3s;
-    }
-    .contact-row:hover .contact-value { color: var(--red); }
-
-    .terminal {
-      background: #0a0a0c;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 1.5rem;
-      margin-top: 2rem;
-      font-size: 0.8rem;
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .terminal.visible { opacity: 1; transform: translateY(0); }
-    .terminal::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 28px;
-      background: #111;
-      border-bottom: 1px solid var(--border);
-    }
-    .terminal-dots {
-      position: absolute;
-      top: 8px; left: 12px;
-      display: flex; gap: 6px;
-    }
-    .terminal-dots span {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-    }
-    .terminal-dots span:nth-child(1) { background: #ff5f56; }
-    .terminal-dots span:nth-child(2) { background: #ffbd2e; }
-    .terminal-dots span:nth-child(3) { background: #27c93f; }
-    .terminal-title {
-      position: absolute;
-      top: 7px; left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.6rem;
-      color: var(--text-dim);
-      letter-spacing: 0.1em;
-    }
-    .terminal-body {
-      margin-top: 1.5rem;
-      line-height: 2;
-    }
-    .t-line { display: flex; align-items: baseline; gap: 0.5rem; }
-    .t-prompt { color: var(--red); }
-    .t-cmd { color: #a8e6a3; }
-    .t-output { color: var(--text-dim); margin-left: 1.5rem; }
-
-    .t-cmd {
-      overflow: hidden;
-      white-space: nowrap;
-      width: 0;
-    }
-    .terminal.visible .t-cmd:nth-child(1) { animation: termType 0.8s 0.2s steps(20) forwards; }
-    .terminal-body .t-line:nth-child(1) .t-cmd { animation: termType 0.8s 0.3s steps(20) forwards; }
-    .terminal-body .t-line:nth-child(2) .t-cmd { animation: termType 0.6s 1.5s steps(15) forwards; }
-    .terminal-body .t-line:nth-child(3) .t-cmd { animation: termType 0.7s 2.8s steps(18) forwards; }
-    .terminal-body .t-line:nth-child(4) .t-cmd { animation: termType 0.5s 4.0s steps(12) forwards; }
-    @keyframes termType {
-      to { width: 100%; }
-    }
-    .t-output { opacity: 0; transition: opacity 0.3s; }
-    .terminal.visible .terminal-body .t-line:nth-child(1) .t-output { animation: fadeIn 0.3s 1.3s forwards; }
-    .terminal.visible .terminal-body .t-line:nth-child(2) .t-output { animation: fadeIn 0.3s 2.6s forwards; }
-    .terminal.visible .terminal-body .t-line:nth-child(3) .t-output { animation: fadeIn 0.3s 3.8s forwards; }
-    .terminal.visible .terminal-body .t-line:nth-child(4) .t-output { animation: fadeIn 0.3s 5.0s forwards; }
-    @keyframes fadeIn { to { opacity: 1; } }
-
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem;
-      text-align: center;
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      position: relative;
-      overflow: hidden;
-    }
-    footer::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--red), transparent);
-      animation: footerLine 3s ease-in-out infinite;
-    }
-    @keyframes footerLine {
-      0% { left: -100%; }
-      100% { left: 100%; }
-    }
-
-    footer span { color: var(--red); }
-
-    #bg-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-    }
-
-    .float-deco {
-      position: fixed;
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--red);
-      opacity: 0.06;
-      pointer-events: none;
-      z-index: 0;
-      animation: floatDrift linear infinite;
-    }
-    @keyframes floatDrift {
-      0% { transform: translateY(0px) rotate(0deg); opacity: 0.06; }
-      50% { opacity: 0.1; }
-      100% { transform: translateY(-30px) rotate(2deg); opacity: 0.06; }
-    }
-
-    #loader {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 99999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      animation: loaderFade 0.5s 2s ease forwards;
-    }
-    @keyframes loaderFade {
-      to { opacity: 0; pointer-events: none; }
-    }
-    .loader-logo {
-      font-family: var(--display);
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--red);
-      letter-spacing: 0.1em;
-      text-shadow: 0 0 20px var(--red);
-      animation: loaderPulse 0.5s ease-in-out infinite alternate;
-    }
-    @keyframes loaderPulse {
-      from { text-shadow: 0 0 10px var(--red); }
-      to { text-shadow: 0 0 30px var(--red), 0 0 60px var(--red-dim); }
-    }
-    .loader-bar-wrap {
-      width: 200px;
-      height: 2px;
-      background: var(--border);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .loader-bar {
-      height: 100%;
-      background: var(--red);
-      box-shadow: 0 0 8px var(--red);
-      animation: loaderBar 1.8s ease forwards;
-    }
-    @keyframes loaderBar { from { width: 0%; } to { width: 100%; } }
-    .loader-text {
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      color: var(--text-dim);
-      text-transform: uppercase;
-    }
-
-    @media (max-width: 600px) {
-      nav { padding: 1rem 1.25rem; }
-      .nav-links { gap: 1.2rem; }
-      .skills-grid { grid-template-columns: 1fr 1fr; }
-      .hero-stats { gap: 1.5rem; }
-    }
-  </style>
+  @media (max-width: 520px) {
+	.card { padding: 36px 28px 32px; }
+	.header { gap: 16px; }
+	.avatar { width: 52px; height: 52px; }
+	.name-en { font-size: 18px; }
+  }
+</style>
 </head>
 <body>
+<div class="card">
 
-<div id="loader">
-  <div class="loader-logo">0xcds4r</div>
-  <div class="loader-bar-wrap">
-    <div class="loader-bar"></div>
+  <div class="header">
+	<img class="avatar" src="https://avatars.githubusercontent.com/u/32211521?v=4" alt="0xcds4r">
+	<div>
+	  <div class="name-sub">cds4r</div>
+	  <div class="name-en"><span>0x</span>cds4r</div>
+	  <div class="tagline">Reverse engineer · C++ · Android modding<br>Remote work available</div>
+	</div>
   </div>
-  <div class="loader-text" id="loader-text">initializing...</div>
+
+  <div class="rule"></div>
+
+  <div class="section">
+	<div class="section-title">Contact</div>
+	<div class="row"><span class="row-label">GitHub</span><a class="row-value" href="https://github.com/0xcds4r" target="_blank" rel="noopener">github.com/0xcds4r</a></div>
+	<div class="row"><span class="row-label">Telegram</span><a class="row-value" href="https://t.me/burnagfy" target="_blank" rel="noopener">@burnagfy</a></div>
+	<div class="row"><span class="row-label">X</span><a class="row-value" href="https://x.com/0xcds4r" target="_blank" rel="noopener">@0xcds4r</a></div>
+	<div class="row"><span class="row-label">Discord</span><a class="row-value" href="https://discord.gg/PzDGkuQF" target="_blank" rel="noopener">discord.gg/PzDGkuQF</a></div>
+	<div class="row"><span class="row-label">Kwork</span><a class="row-value" href="https://kwork.ru/user/cds4r" target="_blank" rel="noopener">kwork.ru/user/cds4r</a></div>
+	<div class="row"><span class="row-label">Manager</span><a class="row-value" href="mailto:ahjtit923@proton.me">ahjtit923@proton.me</a></div>
+  </div>
+
+  <div class="section">
+	<div class="section-title">Skills</div>
+	<div class="skills-list">
+	  <span class="skill-tag">C / C++</span>
+	  <span class="skill-tag">ARM ASM</span>
+	  <span class="skill-tag">x86 ASM</span>
+	  <span class="skill-tag">Reverse engineering</span>
+	  <span class="skill-tag">Android native</span>
+	  <span class="skill-tag">Game modding</span>
+	  <span class="skill-tag">Linux</span>
+	</div>
+  </div>
+
+  <div class="section">
+	<div class="section-title">Projects</div>
+	<div id="repo-list">
+	  <div class="repo-placeholder">loading...</div>
+	</div>
+  </div>
+
+  <div class="section">
+	<div class="section-title">Support</div>
+	<div class="row"><span class="row-label">Donate</span><a class="row-value" href="https://www.donationalerts.com/r/cds4roff" target="_blank" rel="noopener">donationalerts.com/r/cds4roff</a></div>
+	<div class="row"><span class="row-label">Patreon</span><a class="row-value" href="https://www.patreon.com/cds4roff" target="_blank" rel="noopener">patreon.com/cds4roff</a></div>
+	<div class="row"><span class="row-label">Boosty</span><a class="row-value" href="https://boosty.to/cds4roff" target="_blank" rel="noopener">boosty.to/cds4roff</a></div>
+	<div class="row"><span class="row-label">BTC</span><span class="row-value" style="font-size:10px">bc1qj4mw2p66rq5c4km4fcdn4el555x9prjjpg6zk6</span></div>
+	<div class="row"><span class="row-label">ETH</span><span class="row-value" style="font-size:10px">0x50Fd6a64AE70cdc658e1711F706CB220Aa19359b</span></div>
+	</div>
+
+  <div class="footer">
+	<span>0xcds4r</span>
+	<div class="footer-dot"></div>
+	<span id="footer-stats">loading...</span>
+  </div>
+
 </div>
 
-<div class="cursor-dot" id="cursorDot"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
-<canvas id="bg-canvas"></canvas>
-
-<nav>
-  <a href="#home" class="nav-logo">0xcds4r</a>
-  <div class="nav-links">
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#contact">Contact</a>
-  </div>
-</nav>
-
-<section id="home" style="max-width:100%;padding-top:0;padding-bottom:0;position:relative;">
-  <canvas id="matrix-canvas"></canvas>
-  <div class="hex-grid"></div>
-
-  <p class="hero-pre">[ system online ]</p>
-  <h1 class="hero-name" data-text="0xcds4r">
-    <span class="accent">0x</span>cds4r
-  </h1>
-  <p class="hero-subtitle">Developer &nbsp;/&nbsp; Reverse Engineer &nbsp;/&nbsp; Modder</p>
-  <div id="typing-wrap">
-    &gt;&nbsp;<span id="typing"></span><span class="cursor"></span>
-  </div>
-  <p class="hero-location">Based in <span>Russia</span> &nbsp;// RU</p>
-
-  <div class="hero-stats">
-    <div class="stat">
-      <span class="stat-num" data-target="10">0</span>
-      <span class="stat-label">Years XP</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num" data-target="20">0</span>
-      <span class="stat-label">Projects</span>
-    </div>
-    <div class="stat">
-      <span class="stat-num" data-target="6">0</span>
-      <span class="stat-label">Skills</span>
-    </div>
-  </div>
-
-  <div class="scroll-hint">
-    <div class="line"></div>
-    scroll
-  </div>
-</section>
-
-<section id="about">
-  <p class="section-label">// 01 — about</p>
-  <h2 class="section-title">Who Am I</h2>
-
-  <div class="card">
-    <div class="scan-line"></div>
-    <p>
-      Yo. I'm Artem — <strong style="color:#fff">0xcds4r</strong>. Born in Russia, 2003. I dig through binaries, whip up fast hooks, patch mobile game versions and do shit.
-    </p>
-    <p>
-      My main playground is the <strong style="color:#fff">GTA series</strong> — modding it at a low level, reverse engineering game internals, building tools others can't. Strong background in <strong style="color:#fff">C++</strong> and <strong style="color:#fff">Android</strong> platform development.
-    </p>
-  </div>
-
-  <div class="skill-bar-wrap">
-    <div class="skill-bar-row" style="--pct:92%; transition-delay: 0s;">
-      <div class="skill-bar-header"><span class="skill-bar-name">C++</span><span class="skill-bar-pct">92%</span></div>
-      <div class="skill-bar-track"><div class="skill-bar-fill"></div></div>
-    </div>
-    <div class="skill-bar-row" style="--pct:88%; transition-delay: 0.1s;">
-      <div class="skill-bar-header"><span class="skill-bar-name">Reverse Engineering</span><span class="skill-bar-pct">88%</span></div>
-      <div class="skill-bar-track"><div class="skill-bar-fill"></div></div>
-    </div>
-    <div class="skill-bar-row" style="--pct:80%; transition-delay: 0.2s;">
-      <div class="skill-bar-header"><span class="skill-bar-name">Android</span><span class="skill-bar-pct">80%</span></div>
-      <div class="skill-bar-track"><div class="skill-bar-fill"></div></div>
-    </div>
-    <div class="skill-bar-row" style="--pct:75%; transition-delay: 0.3s;">
-      <div class="skill-bar-header"><span class="skill-bar-name">Assembly</span><span class="skill-bar-pct">75%</span></div>
-      <div class="skill-bar-track"><div class="skill-bar-fill"></div></div>
-    </div>
-    <div class="skill-bar-row" style="--pct:95%; transition-delay: 0.4s;">
-      <div class="skill-bar-header"><span class="skill-bar-name">Game Modding</span><span class="skill-bar-pct">95%</span></div>
-      <div class="skill-bar-track"><div class="skill-bar-fill"></div></div>
-    </div>
-  </div>
-
-  <div class="skills-grid">
-    <div class="skill-chip"><i class="fas fa-microchip"></i>Reverse Engineering</div>
-    <div class="skill-chip"><i class="fas fa-bolt"></i>Low-Level Optimization</div>
-    <div class="skill-chip"><i class="fas fa-gamepad"></i>Game Modding</div>
-    <div class="skill-chip"><i class="fas fa-code"></i>C++</div>
-    <div class="skill-chip"><i class="fab fa-android"></i>Android</div>
-    <div class="skill-chip"><i class="fas fa-terminal"></i>Assembly</div>
-  </div>
-</section>
-
-<section id="contact">
-  <p class="section-label">// 02 — contact</p>
-  <h2 class="section-title">Get In Touch</h2>
-
-  <div class="contact-grid">
-    <a class="contact-row" href="mailto:ahjtit923@proton.me" style="transition-delay:0s">
-      <i class="fas fa-envelope"></i>
-      <span class="contact-label">Manager</span>
-      <span class="contact-value">ahjtit923@proton.me</span>
-    </a>
-    <a class="contact-row" href="https://t.me/burnagfy" target="_blank" rel="noopener" style="transition-delay:0.1s">
-      <i class="fab fa-telegram-plane"></i>
-      <span class="contact-label">Telegram</span>
-      <span class="contact-value">@burnagfy</span>
-    </a>
-    <a class="contact-row" href="https://github.com/0xcds4r" target="_blank" rel="noopener" style="transition-delay:0.2s">
-      <i class="fab fa-github"></i>
-      <span class="contact-label">GitHub</span>
-      <span class="contact-value">@0xcds4r</span>
-    </a>
-  </div>
-</section>
-
-<footer>
-  <span>0xcds4r</span> &nbsp;·&nbsp; © 2026 &nbsp;·&nbsp; All rights reserved
-</footer>
-
 <script>
-  const loaderPhrases = ['initializing...', 'loading modules...', 'bypassing firewall...', 'system ready.'];
-  let lp = 0;
-  const ltEl = document.getElementById('loader-text');
-  const ltInterval = setInterval(() => {
-    if (++lp < loaderPhrases.length) ltEl.textContent = loaderPhrases[lp];
-    else clearInterval(ltInterval);
-  }, 500);
+	const USERNAME = '0xcds4r';
 
-  setTimeout(() => {
-    document.getElementById('loader').style.display = 'none';
-  }, 2600);
+	async function loadStats() 
+	{
+		try 
+		{
+			const res = await fetch(`https://api.github.com/users/${USERNAME}`);
+			const data = await res.json();
+			document.getElementById('footer-stats').textContent = `${data.public_repos} repos · ${data.followers} followers`;
+		} 
+		catch 
+		{
+			document.getElementById('footer-stats').textContent = '111 repos · 75 followers';
+		}
+	}
 
-  const dot = document.getElementById('cursorDot');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
+	async function loadRepos() 
+	{
+		const list = document.getElementById('repo-list');
 
-  window.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.left = mx + 'px';
-    dot.style.top = my + 'px';
-  });
+		try 
+		{
+			let all = [];
+			let page = 1;
 
-  function animateRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
+			while (true) 
+			{
+				const res = await fetch(
+					`https://api.github.com/users/${USERNAME}/repos?per_page=100&page=${page}`
+				);
 
-  document.querySelectorAll('a, button, .skill-chip, .card').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      dot.style.width = '10px';
-      dot.style.height = '10px';
-      ring.style.width = '48px';
-      ring.style.height = '48px';
-      ring.style.borderColor = 'var(--red)';
-    });
-    el.addEventListener('mouseleave', () => {
-      dot.style.width = '6px';
-      dot.style.height = '6px';
-      ring.style.width = '32px';
-      ring.style.height = '32px';
-      ring.style.borderColor = 'var(--red-dim)';
-    });
-  });
+				const data = await res.json();
+				if (!Array.isArray(data) || data.length === 0) {
+					break;
+				}
 
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      e.preventDefault();
-      document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
-    });
-  });
+				all = all.concat(data);
+				if (data.length < 100) {
+					break;
+				}
 
-  const phrases = ['dig through binaries', 'build fast hooks', 'patch mobile game versions', 'do shit :)'];
-  let pi = 0, ci = 0, deleting = false;
-  const typEl = document.getElementById('typing');
+				page++;
+			}
 
-  function type() {
-    const phrase = phrases[pi];
-    if (!deleting) {
-      typEl.textContent = phrase.slice(0, ++ci);
-      if (ci === phrase.length) { deleting = true; setTimeout(type, 1800); return; }
-    } else {
-      typEl.textContent = phrase.slice(0, --ci);
-      if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; }
-    }
-    setTimeout(type, deleting ? 40 : 70);
-  }
-  type();
+			const sorted = all
+				.filter(r => !r.fork)
+				.sort((a, b) => b.stargazers_count - a.stargazers_count)
+				.slice(0, 6);
 
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
+			list.innerHTML = '';
 
-  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
+			sorted.forEach(repo => 
+			{
+				const a = document.createElement('a');
+				a.className = 'repo-row';
+				a.href = repo.html_url;
+				a.target = '_blank';
+				a.rel = 'noopener';
 
-  class Particle {
-    constructor() { this.reset(true); }
-    reset(initial) {
-      this.x = Math.random() * canvas.width;
-      this.y = initial ? Math.random() * canvas.height : canvas.height + 10;
-      this.size = Math.random() * 1.5 + 0.3;
-      this.speedY = -(Math.random() * 0.4 + 0.1);
-      this.speedX = (Math.random() - 0.5) * 0.2;
-      this.opacity = Math.random() * 0.4 + 0.05;
-    }
-    update() {
-      this.x += this.speedX; this.y += this.speedY;
-      if (this.y < -5) this.reset(false);
-    }
-    draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,68,68,${this.opacity})`;
-      ctx.fill();
-    }
-  }
+				const desc = repo.description
+					? repo.description.replace(/[А-яЁё\u4e00-\u9fff]/g, '').trim() || repo.description
+					: repo.language || '';
 
-  class NodeParticle {
-    constructor() { this.reset(); }
-    reset() {
-      this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
-      this.vx = (Math.random() - 0.5) * 0.3;
-      this.vy = (Math.random() - 0.5) * 0.3;
-      this.r = Math.random() * 1.5 + 0.5;
-    }
-    update() {
-      this.x += this.vx; this.y += this.vy;
-      if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-      if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-    }
-    draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,68,68,0.25)';
-      ctx.fill();
-    }
-  }
+				a.innerHTML = `
+					<span class="repo-name-text">${repo.name}</span>
+					<span class="repo-star">★ ${repo.stargazers_count}</span>
+				`;
 
-  const particles = Array.from({ length: 80 }, () => new Particle());
-  const nodes = Array.from({ length: 40 }, () => new NodeParticle());
+				list.appendChild(a);
+			});
+		}
+		catch 
+		{
+			list.innerHTML = '<div class="repo-placeholder">could not load repos</div>';
+		}
+	}
 
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const dx = nodes[i].x - nodes[j].x;
-        const dy = nodes[i].y - nodes[j].y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 140) {
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(255,68,68,${0.05 * (1 - dist/140)})`;
-          ctx.lineWidth = 0.5;
-          ctx.moveTo(nodes[i].x, nodes[i].y);
-          ctx.lineTo(nodes[j].x, nodes[j].y);
-          ctx.stroke();
-        }
-      }
-      nodes[i].update();
-      nodes[i].draw();
-    }
-
-    particles.forEach(p => { p.update(); p.draw(); });
-    requestAnimationFrame(animate);
-  }
-  animate();
-
-  const mc = document.getElementById('matrix-canvas');
-  const mctx = mc.getContext('2d');
-  mc.width = window.innerWidth;
-  mc.height = window.innerHeight;
-
-  const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ><{}[]()#$%@!';
-  const colW = 16;
-  const cols = Math.floor(mc.width / colW);
-  const drops = Array(cols).fill(1);
-
-  function matrixRain() {
-    mctx.fillStyle = 'rgba(13,13,15,0.05)';
-    mctx.fillRect(0, 0, mc.width, mc.height);
-    mctx.fillStyle = 'rgba(255,68,68,0.6)';
-    mctx.font = '12px Share Tech Mono';
-    drops.forEach((y, i) => {
-      const char = chars[Math.floor(Math.random() * chars.length)];
-      mctx.fillText(char, i * colW, y * colW);
-      if (y * colW > mc.height && Math.random() > 0.975) drops[i] = 0;
-      drops[i]++;
-    });
-  }
-  setInterval(matrixRain, 60);
-
-  function animateCount(el, target) {
-    let current = 0;
-    const inc = Math.ceil(target / 30);
-    const t = setInterval(() => {
-      current = Math.min(current + inc, target);
-      el.textContent = current + (target > 10 ? '+' : '');
-      if (current >= target) clearInterval(t);
-    }, 50);
-  }
-
-  const revealEls = document.querySelectorAll('.section-label, .section-title, .card, .skill-chip, .contact-row, .terminal, .skill-bar-row');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry, idx) => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        if (el.classList.contains('skill-chip')) {
-          const chips = Array.from(document.querySelectorAll('.skill-chip'));
-          const i = chips.indexOf(el);
-          setTimeout(() => el.classList.add('visible'), i * 80);
-        } else {
-          el.classList.add('visible');
-        }
-        io.unobserve(el);
-
-        if (el.classList.contains('hero-stats')) {
-          el.querySelectorAll('.stat-num').forEach(n => {
-            animateCount(n, parseInt(n.dataset.target));
-          });
-        }
-      }
-    });
-  }, { threshold: 0.15 });
-
-  revealEls.forEach(el => io.observe(el));
-
-  const statIO = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        document.querySelectorAll('.stat-num').forEach(n => animateCount(n, parseInt(n.dataset.target)));
-        statIO.disconnect();
-      }
-    });
-  }, { threshold: 0.5 });
-  const statsEl = document.querySelector('.hero-stats');
-  if (statsEl) statIO.observe(statsEl);
-
-  document.addEventListener('click', e => {
-    const ripple = document.createElement('div');
-    ripple.style.cssText = `
-      position: fixed;
-      left: ${e.clientX}px;
-      top: ${e.clientY}px;
-      width: 4px; height: 4px;
-      border: 1px solid var(--red);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      z-index: 9998;
-      animation: rippleOut 0.6s ease-out forwards;
-    `;
-    document.body.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 650);
-  });
-
-  const rippleStyle = document.createElement('style');
-  rippleStyle.textContent = `
-    @keyframes rippleOut {
-      from { width: 4px; height: 4px; opacity: 1; }
-      to { width: 80px; height: 80px; opacity: 0; }
-    }
-  `;
-  document.head.appendChild(rippleStyle);
+	loadStats();
+	loadRepos();
 </script>
+
 </body>
 </html>
